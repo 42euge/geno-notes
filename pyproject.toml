@@ -1,0 +1,19 @@
+[project]
+name = "geno-notes"
+version = "0.1.0"
+description = "Project journal — tasks, timestamped journal entries, plans, with two-scope (global + per-project) storage"
+requires-python = ">=3.10"
+dependencies = ["click>=8.0"]
+
+[project.optional-dependencies]
+test = ["pytest>=7.0"]
+
+[project.scripts]
+geno-notes = "geno_notes.cli:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["geno_notes*"]

@@ -1,0 +1,103 @@
+---
+name: geno-notes
+description: >-
+  Project journal — tasks, timestamped journal entries, plans. Two scopes
+  coexist: global (~/.geno/geno-notes/) and per-project (./geno/geno-notes/).
+  Use when user says /gt-notes, wants to add/start/complete a task, jot a
+  timestamped note, list or search tasks and journal entries, or move work
+  between scopes.
+allowed-tools: "Bash(geno-notes *) Bash(~/.local/bin/geno-notes *) Bash(~/.geno/venv/bin/geno-notes *)"
+argument-hint: "[scope|path|init|add|start|done|abandon|note|inbox|triage|list|show|search|promote|reindex|compile] [args...]"
+---
+
+# geno-notes — Project Journal
+
+```!
+command -v geno-notes >/dev/null 2>&1 || echo "⚠️ geno-notes is not installed. Run install.sh from the geno-notes repo."
+```
+
+A persistent, greppable, concurrent-safe project journal. Replaces the legacy `geno-tools/labnotes/` layout with one file per task, chunked journal files, and two coexisting storage scopes.
+
+## Scopes
+
+- **Global** (`~/.geno/geno-notes/`) — cross-project knowledge, personal dev log that spans repos.
+- **Project** (`./geno/geno-notes/` found by walking up from cwd) — tasks, notes, plans tied to one repo.
+
+Active scope resolves in this order:
+1. `$GENO_NOTES_SCOPE=global|project`
+2. `$GENO_NOTES_DIR=<path>`
+3. Project detected in cwd or ancestors
+4. Global (auto-created on first use)
+
+Any command takes `--global` or `--project` to override. Read commands take `--all` to union both.
+
+## Commands
+
+Parse the user's `$ARGUMENTS` and dispatch to the CLI.
+
+### `/gt-notes` (no args) or `/gt-notes scope`
+Show the active scope + both dir paths.
+```bash
+geno-notes scope
+```
+
+### `/gt-notes init [--global|--project]`
+Scaffold a scope at the right location and write `config.toml`.
+- No flag in a cwd without a project scope → creates `./geno/geno-notes/` (project).
+- `--global` → ensures `~/.geno/geno-notes/` is scaffolded.
+
+### `/gt-notes add "<description>" [--tag infra --tag security]`
+Create a new task in Backlog. Returns the task ID.
+
+### `/gt-notes start <pattern>`
+Move a task from Backlog → Active. Fuzzy matches on id, slug, or title (exact > prefix > substring). If multiple tasks match in the top tier, the CLI lists them and exits 1 — ask the user to disambiguate.
+
+### `/gt-notes done <pattern>`  /  `/gt-notes abandon <pattern>`
+Complete or abandon a task. Same fuzzy-match rules.
+
+### `/gt-notes note "<text>" [--task <pattern>] [--kind note|finding|decision|bug|milestone]`
+Append a timestamped entry to `journal/YYYY/YYYY-MM.{md,jsonl}`. If `--task` is given, also appends a backlink to the task's `## Journal refs` section.
+
+### `/gt-notes inbox "<text>"`
+Free-floating quick capture — appends to `inbox.md`. Promote later with `triage`.
+
+### `/gt-notes triage`
+Interactively walk inbox items, promoting each to a task or discarding.
+
+### `/gt-notes list [--status active|backlog|done|abandoned] [--json] [--all]`
+List tasks in the active scope. `--all` unions both scopes. `--json` for programmatic use.
+
+### `/gt-notes show <pattern> [--all]`
+Render a task file + its journal refs.
+
+### `/gt-notes search <query> [--all]`
+Plain-text grep across tasks, journal, plans, inbox.
+
+### `/gt-notes promote <pattern> [--to global|project]`
+Move a task (and its plan file, if any) between scopes. Useful when a project-scope task turns out to be cross-cutting.
+
+### `/gt-notes reindex`
+Regenerate `index.md` and `tasks/_index.md`. The CLI does this automatically on every mutation, so run manually only after hand-editing a task file.
+
+### `/gt-notes compile`
+v0.2 stub. Reserved for Karpathy-style llm-wiki compilation from tasks+journal into `wiki/`. Currently a no-op.
+
+## Files (per scope)
+
+```
+<scope-dir>/
+├── index.md                       # auto-gen dashboard
+├── tasks/
+│   ├── _index.md                  # auto-gen list
+│   └── <task-id>.md               # YYYYMMDD-<slug>.md with YAML frontmatter
+├── journal/YYYY/YYYY-MM.{md,jsonl}
+├── plans/<task-id>.md
+├── wiki/README.md                 # reserved for v0.2
+├── inbox.md
+└── .geno-notes/
+    ├── config.toml
+    ├── events.jsonl               # audit log
+    └── locks/                     # flock files
+```
+
+Humans edit `.md`; consumers that need structured data should read `.jsonl` (journal) or call `geno-notes list --json`.
