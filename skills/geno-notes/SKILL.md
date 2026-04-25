@@ -6,8 +6,12 @@ description: >-
   Use when user says /gt-notes, wants to add/start/complete a task, jot a
   timestamped note, list or search tasks and journal entries, or move work
   between scopes.
-allowed-tools: "Bash(geno-notes *) Bash(~/.local/bin/geno-notes *) Bash(~/.geno/venv/bin/geno-notes *)"
 argument-hint: "[scope|path|init|add|start|done|abandon|note|inbox|triage|list|show|search|promote|reindex|compile] [args...]"
+allowed-tools: "Bash(geno-notes *) Bash(~/.local/bin/geno-notes *) Bash(~/.geno/venv/bin/geno-notes *)"
+license: MIT
+metadata:
+  author: 42euge
+  version: "0.1.0"
 ---
 
 # geno-notes — Project Journal

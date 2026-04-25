@@ -1,13 +1,6 @@
 # geno-notes
 
-Project journal for the geno ecosystem — scalable, robust storage for tasks, timestamped journal entries, and plans.
-
-Replaces the legacy `geno-tools/labnotes/` layout with:
-- **One file per task** (`tasks/<task-id>.md` with YAML frontmatter) — stable IDs, concurrent-safe.
-- **Chunked journal** (`journal/YYYY/YYYY-MM.md` + sibling `.jsonl`) — human + machine readable, bounded growth.
-- **Two coexisting scopes**: global (`~/.geno/geno-notes/`) and per-project (`./geno/geno-notes/`).
-- **Append-only event log** for full audit trail.
-- **Concurrency safety** via `O_APPEND` and `flock`.
+Project journal for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Tasks, timestamped journal entries, and plans with two coexisting scopes — global (`~/.geno/geno-notes/`) and per-project (`./geno/geno-notes/`).
 
 ## Install
 
@@ -15,16 +8,27 @@ Replaces the legacy `geno-tools/labnotes/` layout with:
 ./install.sh
 ```
 
-Installs:
-- `~/.geno/venv/bin/geno-notes` (via `pip install -e .`)
-- `~/.local/bin/geno-notes` → venv shim (consumers use bare `geno-notes` on PATH)
-- `~/.claude/skills/geno-notes` → skill symlink
-- `~/.claude/commands/gt-notes.md` → slash command
-- `~/.geno/geno-notes/` → global-scope storage dir, initialized
+## Commands
+
+| Command | Description |
+|---|---|
+| `/gt-notes` | Show active scope and both dir paths |
+| `/gt-notes init [--global\|--project]` | Scaffold a scope at the right location |
+| `/gt-notes add "<desc>" [--tag T]` | Create a new task in Backlog |
+| `/gt-notes start <pattern>` | Move a task from Backlog to Active |
+| `/gt-notes done <pattern>` | Complete a task |
+| `/gt-notes abandon <pattern>` | Abandon a task |
+| `/gt-notes note "<text>" [--task <pat>]` | Append a timestamped journal entry |
+| `/gt-notes inbox "<text>"` | Quick capture to inbox |
+| `/gt-notes triage` | Walk inbox items, promote or discard |
+| `/gt-notes list [--status S] [--all]` | List tasks in active scope |
+| `/gt-notes show <pattern> [--all]` | Render a task file + journal refs |
+| `/gt-notes search <query> [--all]` | Grep across tasks, journal, plans, inbox |
+| `/gt-notes promote <pat> [--to global\|project]` | Move a task between scopes |
 
 ## Scope resolution
 
-When you run `geno-notes <cmd>`, the active scope is chosen in this order:
+Active scope resolves in this order:
 
 1. `$GENO_NOTES_SCOPE` (`global` | `project`) if set
 2. `$GENO_NOTES_DIR` if set — exact dir, scope from its `config.toml`
@@ -33,23 +37,43 @@ When you run `geno-notes <cmd>`, the active scope is chosen in this order:
 
 Use `--global` or `--project` on any command to override. Use `--all` on reads to union both scopes.
 
-## Usage
+## Repository structure
 
-```bash
-geno-notes scope                   # show active scope + both paths
-geno-notes init --project          # scaffold project scope in cwd
-geno-notes add "Auth login flow"   # create task
-geno-notes start auth              # move to active
-geno-notes note "oauth scope broken" --task auth-flow
-geno-notes list --status active
-geno-notes search oauth --all
-geno-notes done auth-flow
-geno-notes promote auth-flow --to global  # move task + plan across scopes
+```
+geno-notes/
+├── package.json          # Vercel Skills manifest
+├── .geno-agents          # agent identity for auto-registration
+├── CLAUDE.md             # agent instructions
+├── install.sh            # installer (venv, symlinks, global scope)
+├── pyproject.toml        # Python package metadata
+├── commands/
+│   └── gt-notes.md       # slash command dispatcher
+├── skills/
+│   └── geno-notes/
+│       └── SKILL.md      # skill definition
+├── geno_notes/           # Python CLI package
+│   ├── __init__.py
+│   ├── cli.py
+│   ├── config.py
+│   ├── events.py
+│   ├── ids.py
+│   ├── indexer.py
+│   ├── journal.py
+│   ├── locks.py
+│   ├── paths.py
+│   ├── search.py
+│   └── tasks.py
+└── tests/
+    ├── conftest.py
+    ├── test_ids.py
+    ├── test_journal.py
+    ├── test_locks.py
+    ├── test_paths.py
+    ├── test_scope.py
+    └── test_tasks.py
 ```
 
-See `geno-notes --help` for the full CLI.
-
-## Layout (v0.1)
+## Storage layout (v0.1)
 
 ```
 <scope-dir>/
@@ -60,18 +84,26 @@ See `geno-notes --help` for the full CLI.
 ├── journal/
 │   └── YYYY/
 │       ├── YYYY-MM.md                # human-readable
-│       └── YYYY-MM.jsonl             # machine-readable (consumers parse this)
+│       └── YYYY-MM.jsonl             # machine-readable
 ├── plans/
 │   └── <task-id>.md
-├── wiki/                             # reserved for v0.2 llm-wiki compilation
+├── wiki/                             # reserved for v0.2
 │   └── README.md
-├── inbox.md                          # quick captures
+├── inbox.md
 └── .geno-notes/
-    ├── config.toml                   # schema_version, scope, tz
+    ├── config.toml
     ├── events.jsonl                  # append-only audit log
-    └── locks/                        # flock files
+    └── locks/
 ```
+
+## Runtime
+
+Python CLI installed into `~/.geno/venv`. PATH shim at `~/.local/bin/geno-notes`.
 
 ## Design
 
 See `docs/` or the [approved plan](./docs/plan.md) for the full design rationale.
+
+## License
+
+MIT
