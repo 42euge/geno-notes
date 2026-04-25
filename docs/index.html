@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>geno-notes</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0d1117;
+    color: #c9d1d9;
+    font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 2rem 1rem;
+  }
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+  h1 {
+    color: #58a6ff;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .tagline {
+    color: #8b949e;
+    font-size: 0.95rem;
+    margin-bottom: 2.5rem;
+    line-height: 1.5;
+  }
+  h2 {
+    color: #58a6ff;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid #21262d;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+  }
+  th {
+    text-align: left;
+    color: #58a6ff;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #30363d;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  td {
+    padding: 0.5rem 0.75rem;
+    border-bottom: 1px solid #161b22;
+  }
+  td:first-child {
+    color: #e6edf3;
+    white-space: nowrap;
+  }
+  td:last-child {
+    color: #8b949e;
+  }
+  tr:hover td {
+    background: #161b22;
+  }
+  code, .code-block {
+    background: #161b22;
+    border: 1px solid #21262d;
+    border-radius: 4px;
+  }
+  code {
+    padding: 0.15em 0.35em;
+    font-size: 0.9em;
+    color: #e6edf3;
+  }
+  .code-block {
+    padding: 1rem 1.25rem;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    font-size: 0.9em;
+  }
+  .code-block .dim { color: #484f58; }
+  .code-block .file { color: #c9d1d9; }
+  .code-block .dir { color: #58a6ff; }
+  .code-block .comment { color: #6e7681; }
+  a {
+    color: #58a6ff;
+    text-decoration: none;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  .ecosystem {
+    list-style: none;
+    padding: 0;
+  }
+  .ecosystem li {
+    padding: 0.4rem 0;
+  }
+  .ecosystem li span {
+    color: #8b949e;
+  }
+  .badge {
+    display: inline-block;
+    background: #58a6ff;
+    color: #0d1117;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.15em 0.5em;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .prompt { color: #58a6ff; }
+  .cmd { color: #e6edf3; }
+  .scope-list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1rem;
+  }
+  .scope-list li {
+    padding: 0.3rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+  }
+  .scope-list li::before {
+    content: attr(data-num);
+    position: absolute;
+    left: 0;
+    color: #58a6ff;
+    font-weight: 600;
+  }
+  .scope-list li code {
+    font-size: 0.85em;
+  }
+  footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid #21262d;
+    color: #484f58;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>geno-notes</h1>
+<p class="tagline">Project journal for <a href="https://docs.anthropic.com/en/docs/claude-code">Claude Code</a>. Tasks, timestamped journal entries, and plans with two coexisting scopes &mdash; global and per-project. Concurrent-safe, append-only audit trail.</p>
+
+<h2>Commands</h2>
+<table>
+  <thead>
+    <tr><th>Command</th><th>Description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>/gt-notes</code></td><td>Show active scope and both dir paths</td></tr>
+    <tr><td><code>/gt-notes init [--global|--project]</code></td><td>Scaffold a scope at the right location</td></tr>
+    <tr><td><code>/gt-notes add "&lt;desc&gt;" [--tag T]</code></td><td>Create a new task in Backlog</td></tr>
+    <tr><td><code>/gt-notes start &lt;pattern&gt;</code></td><td>Move a task from Backlog to Active</td></tr>
+    <tr><td><code>/gt-notes done &lt;pattern&gt;</code></td><td>Complete a task</td></tr>
+    <tr><td><code>/gt-notes abandon &lt;pattern&gt;</code></td><td>Abandon a task</td></tr>
+    <tr><td><code>/gt-notes note "&lt;text&gt;" [--task &lt;pat&gt;]</code></td><td>Append a timestamped journal entry</td></tr>
+    <tr><td><code>/gt-notes inbox "&lt;text&gt;"</code></td><td>Quick capture to inbox</td></tr>
+    <tr><td><code>/gt-notes triage</code></td><td>Walk inbox items, promote or discard</td></tr>
+    <tr><td><code>/gt-notes list [--status S] [--all]</code></td><td>List tasks in active scope</td></tr>
+    <tr><td><code>/gt-notes show &lt;pattern&gt; [--all]</code></td><td>Render a task file + journal refs</td></tr>
+    <tr><td><code>/gt-notes search &lt;query&gt; [--all]</code></td><td>Grep across tasks, journal, plans, inbox</td></tr>
+    <tr><td><code>/gt-notes promote &lt;pat&gt; [--to scope]</code></td><td>Move a task between scopes</td></tr>
+  </tbody>
+</table>
+
+<h2>Scope Resolution</h2>
+<ol class="scope-list">
+  <li data-num="1."><code>$GENO_NOTES_SCOPE</code> (<code>global</code> | <code>project</code>) if set</li>
+  <li data-num="2."><code>$GENO_NOTES_DIR</code> if set &mdash; exact dir</li>
+  <li data-num="3."><code>./geno/geno-notes/</code> found walking up from cwd &rarr; <strong>project</strong></li>
+  <li data-num="4.">Otherwise &rarr; <strong>global</strong> at <code>~/.geno/geno-notes/</code></li>
+</ol>
+<p style="color:#8b949e;">Use <code>--global</code> or <code>--project</code> on any command to override. Use <code>--all</code> on reads to union both scopes.</p>
+
+<h2>Repository Structure</h2>
+<div class="code-block">
+<span class="dir">geno-notes/</span>
+<br><span class="dim">├──</span> <span class="file">package.json</span> <span class="comment"># Vercel Skills manifest</span>
+<br><span class="dim">├──</span> <span class="file">.geno-agents</span> <span class="comment"># agent identity for auto-registration</span>
+<br><span class="dim">├──</span> <span class="file">CLAUDE.md</span> <span class="comment"># agent instructions</span>
+<br><span class="dim">├──</span> <span class="file">install.sh</span> <span class="comment"># installer (venv, symlinks, global scope)</span>
+<br><span class="dim">├──</span> <span class="file">pyproject.toml</span> <span class="comment"># Python package metadata</span>
+<br><span class="dim">├──</span> <span class="dir">commands/</span>
+<br><span class="dim">│   └──</span> <span class="file">gt-notes.md</span> <span class="comment"># slash command dispatcher</span>
+<br><span class="dim">├──</span> <span class="dir">skills/</span>
+<br><span class="dim">│   └──</span> <span class="dir">geno-notes/</span>
+<br><span class="dim">│       └──</span> <span class="file">SKILL.md</span> <span class="comment"># skill definition</span>
+<br><span class="dim">├──</span> <span class="dir">geno_notes/</span> <span class="comment"># Python CLI package</span>
+<br><span class="dim">│   ├──</span> <span class="file">cli.py</span>
+<br><span class="dim">│   ├──</span> <span class="file">config.py</span>
+<br><span class="dim">│   ├──</span> <span class="file">events.py</span>
+<br><span class="dim">│   ├──</span> <span class="file">ids.py</span>
+<br><span class="dim">│   ├──</span> <span class="file">indexer.py</span>
+<br><span class="dim">│   ├──</span> <span class="file">journal.py</span>
+<br><span class="dim">│   ├──</span> <span class="file">locks.py</span>
+<br><span class="dim">│   ├──</span> <span class="file">paths.py</span>
+<br><span class="dim">│   ├──</span> <span class="file">search.py</span>
+<br><span class="dim">│   └──</span> <span class="file">tasks.py</span>
+<br><span class="dim">└──</span> <span class="dir">tests/</span>
+</div>
+
+<h2>Storage Layout</h2>
+<div class="code-block">
+<span class="dir">&lt;scope-dir&gt;/</span>
+<br><span class="dim">├──</span> <span class="file">index.md</span> <span class="comment"># auto-gen dashboard</span>
+<br><span class="dim">├──</span> <span class="dir">tasks/</span>
+<br><span class="dim">│   ├──</span> <span class="file">_index.md</span> <span class="comment"># auto-gen list by status</span>
+<br><span class="dim">│   └──</span> <span class="file">&lt;task-id&gt;.md</span> <span class="comment"># YAML frontmatter: id, status, tags</span>
+<br><span class="dim">├──</span> <span class="dir">journal/</span>
+<br><span class="dim">│   └──</span> <span class="dir">YYYY/</span>
+<br><span class="dim">│       ├──</span> <span class="file">YYYY-MM.md</span> <span class="comment"># human-readable</span>
+<br><span class="dim">│       └──</span> <span class="file">YYYY-MM.jsonl</span> <span class="comment"># machine-readable</span>
+<br><span class="dim">├──</span> <span class="dir">plans/</span>
+<br><span class="dim">│   └──</span> <span class="file">&lt;task-id&gt;.md</span>
+<br><span class="dim">├──</span> <span class="file">inbox.md</span>
+<br><span class="dim">└──</span> <span class="dir">.geno-notes/</span>
+<br><span class="dim">    ├──</span> <span class="file">config.toml</span>
+<br><span class="dim">    ├──</span> <span class="file">events.jsonl</span> <span class="comment"># append-only audit log</span>
+<br><span class="dim">    └──</span> <span class="dir">locks/</span>
+</div>
+
+<h2>Install</h2>
+<div class="code-block">
+<span class="prompt">$</span> <span class="cmd">./install.sh</span>
+</div>
+<p style="margin-top:0.5rem; color:#8b949e;">Installs the CLI into <code>~/.geno/venv</code>, PATH shim at <code>~/.local/bin/geno-notes</code>, skill + command symlinks into <code>~/.claude/</code>, and scaffolds the global scope.</p>
+
+<h2>Ecosystem</h2>
+<ul class="ecosystem">
+  <li><a href="https://42euge.github.io/geno-tools">geno-tools</a> <span>&mdash; orchestrator + general tools</span></li>
+  <li><a href="https://github.com/42euge/geno-dev">geno-dev</a> <span>&mdash; developer utilities</span></li>
+  <li><a href="https://github.com/42euge/geno-research">geno-research</a> <span>&mdash; deep research workflows</span></li>
+  <li><a href="https://github.com/42euge/geno-media">geno-media</a> <span>&mdash; media creation skills</span></li>
+  <li><a href="https://github.com/42euge/geno-notes">geno-notes</a><span class="badge">you are here</span> <span>&mdash; project journal</span></li>
+</ul>
+
+<footer>MIT License &middot; <a href="https://github.com/42euge/geno-notes">github.com/42euge/geno-notes</a></footer>
+
+</div>
+</body>
+</html>
