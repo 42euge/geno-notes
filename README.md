@@ -1,11 +1,11 @@
 # geno-notes
 
-Project journal for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Tasks, timestamped journal entries, and plans with two coexisting scopes — global (`~/.geno/geno-notes/`) and per-project (`./geno/geno-notes/`).
+Project journal for AI coding agents. Tasks, timestamped journal entries, and plans with two coexisting scopes — global (`~/.geno/geno-notes/`) and per-project (`./geno/geno-notes/`).
 
 ## Install
 
 ```bash
-geno-tools install notes
+geno-tools install geno-notes
 ```
 
 ## Commands
