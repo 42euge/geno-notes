@@ -1,0 +1,180 @@
+/* ── Teal + orange palette ── */
+
+:root {
+  --md-primary-fg-color: #0d9488;
+  --md-primary-fg-color--light: #14b8a6;
+  --md-primary-fg-color--dark: #0a7c72;
+  --md-primary-bg-color: #fff;
+  --md-primary-bg-color--light: #ffffffb3;
+  --md-accent-fg-color: #e8650a;
+  --md-accent-fg-color--transparent: #e8650a1a;
+  --md-accent-bg-color: #fff;
+  --md-accent-bg-color--light: #ffffffb3;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #14b8a6;
+  --md-primary-fg-color--light: #2dd4bf;
+  --md-primary-fg-color--dark: #0d9488;
+  --md-primary-bg-color: #e0f5f2;
+  --md-primary-bg-color--light: #e0f5f2b3;
+  --md-accent-fg-color: #f0923a;
+  --md-accent-fg-color--transparent: #f0923a1a;
+  --md-default-bg-color: #0c1518;
+  --md-default-bg-color--light: #111e22;
+  --md-default-bg-color--lighter: #18292e;
+  --md-default-bg-color--lightest: #223840;
+  --md-default-fg-color: #dce8e6;
+  --md-default-fg-color--light: #b4ccc8;
+  --md-default-fg-color--lighter: #8aaba5;
+  --md-default-fg-color--lightest: #5c7e78;
+  --md-code-bg-color: #111e2280;
+  --md-code-fg-color: #dce8e6;
+  --md-typeset-color: #dce8e6;
+  --md-typeset-a-color: #f0923a;
+  --md-footer-bg-color: #081012;
+  --md-footer-bg-color--dark: #050a0c;
+}
+
+/* ── Header gradient ── */
+
+.md-header {
+  background: linear-gradient(135deg, #0d9488 0%, #14b8a6 50%, #2dd4bf 100%);
+}
+
+/* ── Feature cards ── */
+
+.md-typeset .feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.md-typeset .feature-card {
+  background: linear-gradient(135deg, #14b8a610, #0d948808);
+  border: 1px solid #14b8a630;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .feature-card {
+  background: linear-gradient(135deg, #14b8a620, #0d948815);
+  border-color: #14b8a630;
+}
+
+.md-typeset .feature-card:hover {
+  border-color: #e8650a60;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px #e8650a15;
+}
+
+.md-typeset .feature-card .card-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.md-typeset .feature-card h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.md-typeset .feature-card p {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.md-typeset .feature-card a {
+  color: #e8650a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.md-typeset .feature-card a:hover {
+  text-decoration: underline;
+}
+
+/* ── Code blocks ── */
+
+.md-typeset code {
+  border-radius: 0.3rem;
+}
+
+.md-typeset pre > code {
+  border-radius: 0.5rem;
+}
+
+[data-md-color-scheme="slate"] .highlight code {
+  border: 1px solid #14b8a630;
+}
+
+/* ── Admonitions with orange accents ── */
+
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+  border-color: #e8650a;
+}
+
+.md-typeset .tip > .admonition-title,
+.md-typeset .tip > summary {
+  background-color: #e8650a15;
+}
+
+.md-typeset .tip > .admonition-title::before,
+.md-typeset .tip > summary::before {
+  background-color: #e8650a;
+}
+
+/* ── Tables ── */
+
+.md-typeset table:not([class]) th {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+  color: #fff;
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) th {
+  background: linear-gradient(135deg, #0d9488, #14b8a6);
+}
+
+/* ── Footer ── */
+
+.md-footer {
+  background: linear-gradient(135deg, #0a7c72, #0d9488);
+}
+
+/* ── Scrollbar (dark mode) ── */
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar {
+  width: 8px;
+}
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar-track {
+  background: #0c1518;
+}
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar-thumb {
+  background: #14b8a640;
+  border-radius: 4px;
+}
+
+[data-md-color-scheme="slate"] ::-webkit-scrollbar-thumb:hover {
+  background: #14b8a660;
+}
+
+/* ── Announcement bar ── */
+
+.md-banner {
+  background: linear-gradient(90deg, #0d9488, #14b8a6);
+  color: #fff;
+  font-weight: 600;
+}
+
+.md-banner a {
+  color: #fff;
+  text-decoration: underline;
+}
