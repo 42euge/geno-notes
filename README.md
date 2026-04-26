@@ -5,7 +5,7 @@ Project journal for [Claude Code](https://docs.anthropic.com/en/docs/claude-code
 ## Install
 
 ```bash
-./install.sh
+geno-tools install notes
 ```
 
 ## Commands

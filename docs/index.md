@@ -51,7 +51,7 @@ Grep across tasks, journal, plans, and inbox. Union both scopes with `--all`. Ma
 ## Install
 
 ```bash
-./install.sh
+geno-tools install notes
 ```
 
 ## Commands
