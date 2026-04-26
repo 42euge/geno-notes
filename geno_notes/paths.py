@@ -2,12 +2,12 @@
 
 Two scopes coexist:
 - global:   ~/.geno/geno-notes/
-- project:  ./geno/geno-notes/  (walking up from cwd)
+- project:  ./.geno/geno-notes/  (walking up from cwd)
 
 Scope resolution order:
   1. $GENO_NOTES_SCOPE (global|project)
   2. $GENO_NOTES_DIR   (exact dir; scope read from its config.toml)
-  3. ancestor-walk for ./geno/geno-notes/ → project
+  3. ancestor-walk for ./.geno/geno-notes/ → project
   4. otherwise → global (auto-created on first use)
 """
 
@@ -18,7 +18,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 GLOBAL_DIR = Path.home() / ".geno" / "geno-notes"
-PROJECT_DIRNAME = "geno"
+PROJECT_DIRNAME = ".geno"
 PROJECT_SUBDIRNAME = "geno-notes"
 
 
@@ -29,7 +29,7 @@ class Scope:
 
 
 def _find_project_dir(start: Path) -> Path | None:
-    """Walk up from `start` looking for ./geno/geno-notes/."""
+    """Walk up from `start` looking for ./.geno/geno-notes/."""
     cur = start.resolve()
     while True:
         candidate = cur / PROJECT_DIRNAME / PROJECT_SUBDIRNAME
@@ -55,7 +55,7 @@ def resolve_scope(
         if not pdir:
             raise RuntimeError(
                 "No project scope found. "
-                "Run `geno-notes init --project` here first, or walk into a dir with ./geno/geno-notes/."
+                "Run `geno-notes init --project` here first, or walk into a dir with ./.geno/geno-notes/."
             )
         return Scope("project", pdir)
 
