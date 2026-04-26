@@ -10,7 +10,7 @@ from geno_notes.config import ensure_config
 
 
 def _init_project(cwd):
-    (cwd / "geno" / "geno-notes").mkdir(parents=True)
+    (cwd / ".geno" / "geno-notes").mkdir(parents=True)
     scope = paths.resolve_scope()
     paths.ensure_structure(scope)
     ensure_config(scope.dir, scope.name)

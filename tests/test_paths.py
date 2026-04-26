@@ -17,31 +17,31 @@ def test_fresh_cwd_resolves_to_global(cwd):
 
 
 def test_project_dir_is_detected_from_cwd(cwd):
-    (cwd / "geno" / "geno-notes").mkdir(parents=True)
+    (cwd / ".geno" / "geno-notes").mkdir(parents=True)
     scope = paths.resolve_scope()
     assert scope.name == "project"
-    assert scope.dir == cwd / "geno" / "geno-notes"
+    assert scope.dir == cwd / ".geno" / "geno-notes"
 
 
 def test_project_dir_is_detected_from_descendant(cwd, monkeypatch):
-    (cwd / "geno" / "geno-notes").mkdir(parents=True)
+    (cwd / ".geno" / "geno-notes").mkdir(parents=True)
     deep = cwd / "a" / "b" / "c"
     deep.mkdir(parents=True)
     monkeypatch.chdir(deep)
     scope = paths.resolve_scope()
     assert scope.name == "project"
-    assert scope.dir == cwd / "geno" / "geno-notes"
+    assert scope.dir == cwd / ".geno" / "geno-notes"
 
 
 def test_scope_env_var_forces_global(cwd, monkeypatch):
-    (cwd / "geno" / "geno-notes").mkdir(parents=True)
+    (cwd / ".geno" / "geno-notes").mkdir(parents=True)
     monkeypatch.setenv("GENO_NOTES_SCOPE", "global")
     scope = paths.resolve_scope()
     assert scope.name == "global"
 
 
 def test_scope_env_var_forces_project(cwd, monkeypatch):
-    (cwd / "geno" / "geno-notes").mkdir(parents=True)
+    (cwd / ".geno" / "geno-notes").mkdir(parents=True)
     monkeypatch.setenv("GENO_NOTES_SCOPE", "project")
     scope = paths.resolve_scope()
     assert scope.name == "project"
