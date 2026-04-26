@@ -87,7 +87,7 @@ geno-notes/
 │       └── YYYY-MM.jsonl             # machine-readable
 ├── plans/
 │   └── <task-id>.md
-├── wiki/                             # reserved for v0.2
+├── wiki/                             # llm-wiki output
 │   └── README.md
 ├── inbox.md
 └── .geno-notes/

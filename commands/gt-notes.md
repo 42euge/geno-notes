@@ -36,7 +36,7 @@ Every scope-sensitive command accepts `--global` or `--project` to override; rea
 | `search <q> [--all]` | `geno-notes search <q> [--all]` |
 | `promote <pat> [--to G|P]` | `geno-notes promote <pat> [--to ...]` |
 | `reindex` | `geno-notes reindex` |
-| `compile` | `geno-notes compile` (v0.2 stub) |
+| `compile` | `geno-notes compile` — build wiki/ via llm-wiki |
 
 If the user passes `--global`/`--project`/`--all`, forward those flags verbatim.
 

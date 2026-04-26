@@ -86,7 +86,7 @@ Regenerate `index.md` and `tasks/_index.md`. The CLI does this automatically on 
 
 **`/gt-notes compile`**
 
-v0.2 stub. Reserved for llm-wiki compilation from tasks + journal into `wiki/`. Currently a no-op.
+Compile tasks + journal into linked markdown notes in `wiki/` via [llm-wiki](https://github.com/42euge/llm-wiki). Requires `llm-wiki` to be installed.
 
 ---
 

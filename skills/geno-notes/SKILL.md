@@ -84,7 +84,7 @@ Move a task (and its plan file, if any) between scopes. Useful when a project-sc
 Regenerate `index.md` and `tasks/_index.md`. The CLI does this automatically on every mutation, so run manually only after hand-editing a task file.
 
 ### `/gt-notes compile`
-v0.2 stub. Reserved for Karpathy-style llm-wiki compilation from tasks+journal into `wiki/`. Currently a no-op.
+Compile tasks + journal into linked markdown notes in `wiki/` via [llm-wiki](https://github.com/42euge/llm-wiki). Requires `llm-wiki` to be installed.
 
 ## Files (per scope)
 
@@ -96,7 +96,7 @@ v0.2 stub. Reserved for Karpathy-style llm-wiki compilation from tasks+journal i
 │   └── <task-id>.md               # YYYYMMDD-<slug>.md with YAML frontmatter
 ├── journal/YYYY/YYYY-MM.{md,jsonl}
 ├── plans/<task-id>.md
-├── wiki/README.md                 # reserved for v0.2
+├── wiki/README.md                 # llm-wiki output
 ├── inbox.md
 └── .geno-notes/
     ├── config.toml

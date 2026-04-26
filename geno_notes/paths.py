@@ -109,9 +109,9 @@ def ensure_structure(scope: Scope) -> None:
     _seed(d / "inbox.md", "# Inbox\n\nQuick captures. Use `geno-notes triage` to promote.\n")
     _seed(
         d / "wiki" / "README.md",
-        "# Wiki (reserved for v0.2)\n\n"
-        "This directory is reserved for Karpathy-style llm-wiki compilation.\n"
-        "Run `geno-notes compile` once v0.2 ships.\n",
+        "# Wiki\n\n"
+        "Linked markdown notes compiled from tasks + journal via llm-wiki.\n"
+        "Run `geno-notes compile` to rebuild.\n",
     )
     _seed(d / "tasks" / "_index.md", "# Tasks\n\n_Auto-generated. Do not edit._\n")
     _seed(d / "index.md", f"# geno-notes ({scope.name})\n\n_Auto-generated dashboard._\n")

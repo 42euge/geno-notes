@@ -382,18 +382,24 @@ def reindex_cmd(global_: bool, project_: bool):
     click.echo(f"Reindexed {scope.name} scope.")
 
 
-# ─── v0.2 stub ─────────────────────────────────────────────────────────
+# ─── wiki (llm-wiki wrapper) ───────────────────────────────────────────
 
 
 @main.command("compile")
 @_scope_options
 def compile_cmd(global_: bool, project_: bool):
-    """v0.2 stub: compile tasks+journal into wiki/ (Karpathy llm-wiki pattern)."""
+    """Compile tasks + journal into wiki/ via llm-wiki."""
     scope = _pick_scope(global_, project_)
-    click.echo(
-        f"compile: reserved for v0.2. {scope.dir / 'wiki'} will be populated by the "
-        "llm-wiki compile loop. No-op in v0.1.",
-    )
+    try:
+        from llm_wiki import compile as wiki_compile
+    except ImportError:
+        click.echo(
+            "llm-wiki is not installed. Install it with: pip install llm-wiki",
+            err=True,
+        )
+        raise SystemExit(1)
+    wiki_dir = scope.dir / "wiki"
+    wiki_compile(source=scope.dir, output=wiki_dir)
 
 
 if __name__ == "__main__":
