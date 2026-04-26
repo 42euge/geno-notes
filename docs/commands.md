@@ -86,7 +86,35 @@ Regenerate `index.md` and `tasks/_index.md`. The CLI does this automatically on 
 
 **`/gt-notes compile`**
 
-v0.2 stub. Reserved for llm-wiki compilation from tasks + journal into `wiki/`. Currently a no-op.
+Compile primary sources into wiki pages ([Karpathy llm-wiki pattern](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)). The CLI gathers all source material and existing wiki pages; the agent synthesizes them into interlinked markdown pages under `wiki/`.
+
+The primary sources (tasks, journal, plans) are the system of record. The wiki is a **derived view** — a persistent, compounding synthesis that can always be rebuilt. Each page covers one topic, uses `[[wikilinks]]` to connect related pages, and cites source tasks/journal entries. Existing pages are updated, not replaced.
+
+!!! tip
+    The wiki compounds over time. Each compile pass integrates new sources into existing pages rather than starting from scratch. Status changes in tasks (done, abandoned) are reflected in the wiki.
+
+**`/gt-notes lint`**
+
+Health-check the wiki against primary sources. The agent reads both layers and reports:
+
+- Stale pages superseded by newer sources
+- Orphan pages with no inbound links
+- Missing pages referenced by wikilinks but not yet created
+- Gaps — important topics with no wiki coverage
+- Contradictions between wiki pages or between wiki and sources
+- Dead references to deleted tasks or journal entries
+
+---
+
+## Architecture
+
+geno-notes implements the Karpathy llm-wiki pattern. Three layers:
+
+| Layer | geno-notes | Role |
+|---|---|---|
+| **Primary sources** | `tasks/`, `journal/`, `plans/`, `inbox.md` | System of record. Human + agent edited. |
+| **Wiki** | `wiki/` | Derived view. Agent-generated, rebuildable. |
+| **Schema** | `SKILL.md`, `CLAUDE.md` | Tells the agent how to operate. |
 
 ---
 
@@ -106,6 +134,9 @@ Each scope directory follows this structure:
 │       └── YYYY-MM.jsonl          # machine-readable
 ├── plans/
 │   └── <task-id>.md
+├── wiki/
+│   ├── index.md                   # catalog of all wiki pages
+│   └── <topic-slug>.md            # compiled topic/entity pages
 ├── inbox.md
 └── .geno-notes/
     ├── config.toml
@@ -113,4 +144,4 @@ Each scope directory follows this structure:
     └── locks/
 ```
 
-Humans edit `.md`; consumers that need structured data should read `.jsonl` (journal) or call `geno-notes list --json`.
+Primary sources are the system of record. The wiki is derived — always rebuildable via `compile`.
