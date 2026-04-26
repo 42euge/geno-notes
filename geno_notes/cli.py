@@ -382,24 +382,88 @@ def reindex_cmd(global_: bool, project_: bool):
     click.echo(f"Reindexed {scope.name} scope.")
 
 
-# ─── wiki (llm-wiki wrapper) ───────────────────────────────────────────
+# ─── wiki (llm-wiki pattern) ──────────────────────────────��───────────
+
+
+def _dump_sources(scope: Scope) -> None:
+    """Print all primary sources from a scope to stdout."""
+    all_tasks = tasks.load_all(scope.dir)
+    click.echo(f"## Tasks ({len(all_tasks)})")
+    click.echo()
+    for t in all_tasks:
+        click.echo(f"### [{t.status}] {t.title}")
+        click.echo(f"ID: {t.id}  Tags: {', '.join(t.tags) if t.tags else '—'}")
+        task_file = tasks.task_path(scope.dir, t.id)
+        if task_file.exists():
+            body = task_file.read_text(encoding="utf-8")
+            click.echo(body)
+        click.echo()
+
+    journal_dir = scope.dir / "journal"
+    click.echo("## Journal")
+    click.echo()
+    if journal_dir.is_dir():
+        for jsonl in sorted(journal_dir.rglob("*.jsonl")):
+            click.echo(f"### {jsonl.stem}")
+            click.echo(jsonl.read_text(encoding="utf-8"))
+            click.echo()
+
+    plans_dir = scope.dir / "plans"
+    click.echo("## Plans")
+    click.echo()
+    if plans_dir.is_dir():
+        for plan in sorted(plans_dir.glob("*.md")):
+            click.echo(f"### {plan.stem}")
+            click.echo(plan.read_text(encoding="utf-8"))
+            click.echo()
+
+
+def _dump_wiki(scope: Scope) -> None:
+    """Print all existing wiki pages to stdout."""
+    wiki_dir = scope.dir / "wiki"
+    pages = sorted(wiki_dir.glob("*.md")) if wiki_dir.is_dir() else []
+    pages = [p for p in pages if p.name != "README.md"]
+    click.echo(f"## Existing wiki pages ({len(pages)})")
+    click.echo()
+    if not pages:
+        click.echo("(none)")
+        click.echo()
+        return
+    for page in pages:
+        click.echo(f"### {page.stem}")
+        click.echo(page.read_text(encoding="utf-8"))
+        click.echo()
 
 
 @main.command("compile")
 @_scope_options
 def compile_cmd(global_: bool, project_: bool):
-    """Compile tasks + journal into wiki/ via llm-wiki."""
+    """Gather sources + existing wiki for compilation by the agent."""
     scope = _pick_scope(global_, project_)
-    try:
-        from llm_wiki import compile as wiki_compile
-    except ImportError:
-        click.echo(
-            "llm-wiki is not installed. Install it with: pip install llm-wiki",
-            err=True,
-        )
-        raise SystemExit(1)
     wiki_dir = scope.dir / "wiki"
-    wiki_compile(source=scope.dir, output=wiki_dir)
+
+    click.echo(f"# Wiki compile — {scope.name} scope")
+    click.echo(f"# Source: {scope.dir}")
+    click.echo(f"# Output: {wiki_dir}")
+    click.echo()
+
+    _dump_sources(scope)
+    _dump_wiki(scope)
+
+
+@main.command("lint")
+@_scope_options
+def lint_cmd(global_: bool, project_: bool):
+    """Gather wiki + sources for health-check by the agent."""
+    scope = _pick_scope(global_, project_)
+    wiki_dir = scope.dir / "wiki"
+
+    click.echo(f"# Wiki lint — {scope.name} scope")
+    click.echo(f"# Wiki: {wiki_dir}")
+    click.echo()
+
+    _dump_wiki(scope)
+    _dump_sources(scope)
 
 
 if __name__ == "__main__":

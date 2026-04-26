@@ -78,5 +78,5 @@ def test_ensure_structure_creates_all_dirs(cwd):
     assert (d / "wiki").is_dir()
     assert (d / ".geno-notes" / "locks").is_dir()
     assert (d / "inbox.md").is_file()
-    assert (d / "wiki" / "README.md").is_file()
+    assert (d / "wiki" / "index.md").is_file()
     assert (d / ".geno-notes" / "events.jsonl").is_file()

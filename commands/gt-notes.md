@@ -1,6 +1,6 @@
 ---
 description: "Manage project notes: tasks, timestamped journal entries, plans. Scope-aware (global + per-project)."
-argument-hint: "[scope|path|init|add|start|done|abandon|note|inbox|triage|list|show|search|promote|reindex|compile] [args...]"
+argument-hint: "[scope|path|init|add|start|done|abandon|note|inbox|triage|list|show|search|promote|reindex|compile|lint] [args...]"
 allowed-tools: "Bash(geno-notes *) Bash(~/.local/bin/geno-notes *) Bash(~/.geno/venv/bin/geno-notes *)"
 ---
 
@@ -36,7 +36,8 @@ Every scope-sensitive command accepts `--global` or `--project` to override; rea
 | `search <q> [--all]` | `geno-notes search <q> [--all]` |
 | `promote <pat> [--to G|P]` | `geno-notes promote <pat> [--to ...]` |
 | `reindex` | `geno-notes reindex` |
-| `compile` | `geno-notes compile` — build wiki/ via llm-wiki |
+| `compile` | `geno-notes compile` — synthesize wiki from tasks + journal |
+| `lint` | `geno-notes lint` — health-check wiki against sources |
 
 If the user passes `--global`/`--project`/`--all`, forward those flags verbatim.
 
