@@ -14,6 +14,8 @@ from geno_notes.config import ensure_config, read_config, write_config
 from geno_notes.indexer import reindex
 from geno_notes.paths import (
     GLOBAL_DIR,
+    PROJECT_DIRNAME,
+    PROJECT_SUBDIRNAME,
     Scope,
     ensure_structure,
     list_all_scopes,
@@ -91,10 +93,10 @@ def init(global_: bool, project_: bool):
             target = Scope("project", scope_for("project").dir)
         except RuntimeError:
             # No existing project; create one in cwd.
-            target_dir = Path.cwd() / "geno" / "geno-notes"
+            target_dir = Path.cwd() / PROJECT_DIRNAME / PROJECT_SUBDIRNAME
             target = Scope("project", target_dir)
     elif project_:
-        target_dir = Path.cwd() / "geno" / "geno-notes"
+        target_dir = Path.cwd() / PROJECT_DIRNAME / PROJECT_SUBDIRNAME
         target = Scope("project", target_dir)
     else:
         target = Scope("global", GLOBAL_DIR)
