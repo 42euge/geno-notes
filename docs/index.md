@@ -1,57 +1,20 @@
 # geno-notes
 
-Project journal for [Claude Code](https://docs.anthropic.com/en/docs/claude-code). Tasks, timestamped journal entries, and plans with two coexisting scopes — global and per-project.
+Project journal for AI coding agents. Tasks, timestamped journal entries, and plans with two coexisting scopes — global and per-project.
 
 Part of the [geno-tools](https://42euge.github.io/geno-tools) ecosystem.
 
-<div class="feature-grid" markdown>
+## Features
 
-<div class="feature-card" markdown>
-<span class="card-icon">:material-checkbox-marked-outline:</span>
-
-### Task management
-
-Create, activate, complete, and abandon tasks with stable IDs and YAML frontmatter. Fuzzy-match by id, slug, or title.
-
-[See command :material-arrow-right:](commands.md#task-lifecycle)
-</div>
-
-<div class="feature-card" markdown>
-<span class="card-icon">:material-notebook-edit:</span>
-
-### Timestamped journal
-
-Append notes with optional task links and kind tags. Chunked by month — human-readable markdown plus machine-readable JSONL.
-
-[See command :material-arrow-right:](commands.md#journal)
-</div>
-
-<div class="feature-card" markdown>
-<span class="card-icon">:material-swap-horizontal:</span>
-
-### Two-scope storage
-
-Global scope (`~/.geno/geno-notes/`) for cross-project knowledge, project scope (`./geno/geno-notes/`) for repo-specific work. Promote tasks between scopes.
-
-[See command :material-arrow-right:](commands.md#scope-management)
-</div>
-
-<div class="feature-card" markdown>
-<span class="card-icon">:material-magnify:</span>
-
-### Search & discovery
-
-Grep across tasks, journal, plans, and inbox. Union both scopes with `--all`. Machine-readable output with `--json`.
-
-[See command :material-arrow-right:](commands.md#search)
-</div>
-
-</div>
+- **Task management** — Create, activate, complete, and abandon tasks with stable IDs and YAML frontmatter. Fuzzy-match by id, slug, or title.
+- **Timestamped journal** — Append notes with optional task links and kind tags. Chunked by month — human-readable markdown plus machine-readable JSONL.
+- **Two-scope storage** — Global scope (`~/.geno/geno-notes/`) for cross-project knowledge, project scope (`./geno/geno-notes/`) for repo-specific work. Promote tasks between scopes.
+- **Search & discovery** — Grep across tasks, journal, plans, and inbox. Union both scopes with `--all`. Machine-readable output with `--json`.
 
 ## Install
 
 ```bash
-geno-tools install notes
+geno-tools install geno-notes
 ```
 
 ## Commands

@@ -1,0 +1,16 @@
+name: geno-notes
+version: "0.1.0"
+description: >-
+  Project journal — tasks, timestamped journal entries, plans with
+  two-scope (global + per-project) storage.
+
+venv:
+  name: geno-notes
+  deps:
+    - "."
+
+runtime:
+  - src: geno_notes/
+    dst: geno_notes/
+
+config: []

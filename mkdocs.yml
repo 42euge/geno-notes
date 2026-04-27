@@ -1,12 +1,11 @@
 site_name: geno-notes
-site_description: Project journal for Claude Code — tasks, journal entries, and plans
+site_description: Project journal for AI coding agents — tasks, journal entries, and plans
 site_url: https://42euge.github.io/geno-notes
 repo_url: https://github.com/42euge/geno-notes
 repo_name: 42euge/geno-notes
 
 theme:
   name: material
-  custom_dir: docs/overrides
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -37,10 +36,10 @@ theme:
     - search.highlight
     - search.suggest
     - toc.follow
-    - announce.dismiss
 
 nav:
-  - Overview: index.md
+  - Home: index.md
+  - Getting Started: getting-started.md
   - Commands: commands.md
 
 extra_css:
