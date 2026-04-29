@@ -466,5 +466,73 @@ def lint_cmd(global_: bool, project_: bool):
     _dump_sources(scope)
 
 
+# ─── site ─────────────────────────────────────────────────────────────
+
+
+@main.command()
+@click.option("--serve", "do_serve", is_flag=True, help="Start mkdocs serve for live preview.")
+@click.option("--open", "do_open", is_flag=True, help="Open the built site in the default browser.")
+@click.option("--port", default=8000, help="Port for mkdocs serve (default: 8000).")
+@click.option("--all", "union", is_flag=True, help="Merge project + global into one site.")
+@_scope_options
+def site(do_serve: bool, do_open: bool, port: int, union: bool, global_: bool, project_: bool):
+    """Generate a MkDocs Material site from notes."""
+    from geno_notes import site as site_mod
+
+    missing = site_mod.check_deps()
+    if missing:
+        click.echo(f"Missing dependencies: {', '.join(missing)}")
+        if click.confirm("Install them now?"):
+            site_mod.install_deps(missing)
+        else:
+            click.echo("Aborted — install mkdocs and mkdocs-material to use this command.", err=True)
+            sys.exit(1)
+
+    if union:
+        scopes = list_all_scopes()
+    else:
+        scopes = [_pick_scope(global_, project_)]
+
+    if not scopes:
+        click.echo("error: no scopes found", err=True)
+        sys.exit(1)
+
+    click.echo(f"Staging site from {len(scopes)} scope(s)…")
+    staging_dir = site_mod.generate(scopes)
+
+    if do_serve:
+        click.echo(f"Serving at http://localhost:{port}/ (Ctrl+C to stop)")
+        proc = site_mod.serve(staging_dir, port=port)
+        try:
+            proc.wait()
+        except KeyboardInterrupt:
+            proc.terminate()
+        return
+
+    click.echo("Building…")
+    site_dir = site_mod.build(staging_dir)
+    click.echo(f"Site built → {site_dir}")
+
+    if do_open:
+        _open_site(site_dir)
+    elif not do_open and not do_serve:
+        if click.confirm("Open in browser?"):
+            _open_site(site_dir)
+
+
+def _open_site(site_dir: Path):
+    import platform
+    import subprocess as sp
+
+    index = site_dir / "index.html"
+    target = str(index) if index.exists() else str(site_dir)
+    if platform.system() == "Darwin":
+        sp.Popen(["open", target])
+    elif platform.system() == "Linux":
+        sp.Popen(["xdg-open", target])
+    else:
+        click.echo(f"Open {target} in your browser.")
+
+
 if __name__ == "__main__":
     main()

@@ -25,6 +25,7 @@ geno-tools install geno-notes
 | `/gt-notes show <pattern> [--all]` | Render a task file + journal refs |
 | `/gt-notes search <query> [--all]` | Grep across tasks, journal, plans, inbox |
 | `/gt-notes promote <pat> [--to global\|project]` | Move a task between scopes |
+| `/gt-notes site [--serve\|--open]` | Generate a MkDocs Material site from notes |
 
 ## Scope resolution
 
@@ -62,6 +63,7 @@ geno-notes/
 │   ├── locks.py
 │   ├── paths.py
 │   ├── search.py
+│   ├── site.py
 │   └── tasks.py
 └── tests/
     ├── conftest.py
