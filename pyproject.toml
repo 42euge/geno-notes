@@ -7,6 +7,7 @@ dependencies = ["click>=8.0"]
 
 [project.optional-dependencies]
 test = ["pytest>=7.0"]
+site = ["mkdocs>=1.5", "mkdocs-material>=9.0", "pyyaml>=6.0"]
 
 [project.scripts]
 geno-notes = "geno_notes.cli:main"

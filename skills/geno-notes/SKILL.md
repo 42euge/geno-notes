@@ -6,7 +6,7 @@ description: >-
   Use when user says /gt-notes, wants to add/start/complete a task, jot a
   timestamped note, list or search tasks and journal entries, or move work
   between scopes.
-argument-hint: "[scope|path|init|add|start|done|abandon|note|inbox|triage|list|show|search|promote|reindex|compile|lint] [args...]"
+argument-hint: "[scope|path|init|add|start|done|abandon|note|inbox|triage|list|show|search|promote|reindex|compile|lint|site] [args...]"
 allowed-tools: "Bash(geno-notes *) Bash(~/.local/bin/geno-notes *) Bash(~/.geno/venv/bin/geno-notes *)"
 license: MIT
 metadata:
@@ -106,6 +106,21 @@ The primary sources (tasks, journal, plans) are the system of record. The wiki i
 - Prefer updating over creating — the wiki compounds over time
 - When sources contradict, note the contradiction and cite both sides
 - Status-aware: reflect task statuses (done = resolved, active = in progress, abandoned = dropped)
+
+### `/gt-notes site [--serve] [--open] [--port PORT]`
+Generate a MkDocs Material website from the notes in the active scope. The site is built to `.geno-notes/_site_staging/site/` (never checked in).
+
+- `--open` — build and open the site in the default browser
+- `--serve` — start `mkdocs serve` for live-reloading preview
+- `--port` — port for serve mode (default 8000)
+- `--all` — merge project + global scopes into one site
+
+Default behavior (no flags): build, then ask the user if they want to open.
+
+```bash
+geno-notes site --open
+geno-notes site --serve --all
+```
 
 ### `/gt-notes lint`
 Health-check the wiki against primary sources.
