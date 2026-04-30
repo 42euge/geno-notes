@@ -7,6 +7,7 @@ Project journal for AI coding agents: tasks, timestamped journal entries, plans.
 | Skill | Sub-skillset | Slash command |
 |-------|-------------|---------------|
 | geno-notes | — | — (umbrella) |
+| geno-notes-sites-generate | sites | /geno-notes-sites-generate |
 
 ## Repo structure
 
@@ -16,7 +17,9 @@ geno-notes/
 ├── SKILL.md             # umbrella skill manifest
 ├── genotools.yaml       # geno-tools manifest
 ├── skills/
-│   └── geno-notes/      #   umbrella skill
+│   ├── geno-notes/                #   umbrella skill
+│   │   └── SKILL.md
+│   └── geno-notes-sites-generate/ #   sub-skill: generate MkDocs site
 │       └── SKILL.md
 ├── commands/
 │   └── gt-notes.md      #   slash command dispatcher
@@ -39,8 +42,8 @@ geno-notes/
 
 ## Conventions
 
-- geno-notes is a single-skill skillset backed by a Python CLI. Subcommands are dispatched via the CLI, not separate skill folders.
-- The slash command `/gt-notes` dispatches to the `geno-notes` CLI binary.
+- Sub-skillsets have their own `skills/{name}/SKILL.md` and dispatch to the `geno-notes` CLI.
+- The umbrella slash command `/gt-notes` dispatches to the `geno-notes` CLI binary.
 
 ## Architecture
 
