@@ -35,6 +35,14 @@ Active scope resolves in this order:
 
 Any command takes `--global` or `--project` to override. Read commands take `--all` to union both.
 
+## Sub-skills
+
+| Skill | Slash command | Description |
+|-------|--------------|-------------|
+| geno-notes-wiki-compile | /geno-notes-wiki-compile | Compile primary sources into wiki pages |
+| geno-notes-wiki-lint | /geno-notes-wiki-lint | Health-check the wiki against primary sources |
+| geno-notes-sites-generate | /geno-notes-sites-generate | Generate a MkDocs Material website from notes |
+
 ## Commands
 
 Parse the user's `$ARGUMENTS` and dispatch to the CLI.
@@ -84,60 +92,13 @@ Move a task (and its plan file, if any) between scopes. Useful when a project-sc
 Regenerate `index.md` and `tasks/_index.md`. The CLI does this automatically on every mutation, so run manually only after hand-editing a task file.
 
 ### `/gt-notes compile`
-Compile primary sources into wiki pages (Karpathy llm-wiki pattern).
-
-The primary sources (tasks, journal, plans) are the system of record. The wiki is a **derived view** — a persistent, compounding synthesis that can always be rebuilt from the primaries.
-
-**Workflow:**
-
-1. Run `geno-notes compile` — this dumps all source material AND existing wiki pages.
-2. Read the output. Identify distinct topics, entities, themes, and connections across the sources.
-3. For each topic, either **update an existing wiki page** or **create a new one**:
-   - Write to `<scope-dir>/wiki/<topic-slug>.md`
-   - Use `[[page-name]]` wikilinks to connect related pages
-   - Cite source tasks by ID (e.g. `(task: 20260425-auth-flow)`) and journal entries by date
-   - Include YAML frontmatter: `tags`, `sources` (list of task IDs / journal months referenced), `updated` (ISO date)
-4. Update `<scope-dir>/wiki/index.md` — a catalog of every wiki page with a link and one-line summary, organized by category.
-5. Log the compile: `geno-notes note "wiki compile: N pages created, M updated" --kind milestone`
-
-**Page guidelines:**
-- Each page covers one distinct topic, entity, or concept
-- Pages should be self-contained but link to related pages
-- Prefer updating over creating — the wiki compounds over time
-- When sources contradict, note the contradiction and cite both sides
-- Status-aware: reflect task statuses (done = resolved, active = in progress, abandoned = dropped)
+Compile primary sources into wiki pages. See `/geno-notes-wiki-compile` for the full workflow.
 
 ### `/gt-notes site [--serve] [--open] [--port PORT]`
-Generate a MkDocs Material website from the notes in the active scope. The site is built to `.geno-notes/_site_staging/site/` (never checked in).
-
-- `--open` — build and open the site in the default browser
-- `--serve` — start `mkdocs serve` for live-reloading preview
-- `--port` — port for serve mode (default 8000)
-- `--all` — merge project + global scopes into one site
-
-Default behavior (no flags): build, then ask the user if they want to open.
-
-```bash
-geno-notes site --open
-geno-notes site --serve --all
-```
+Generate a MkDocs Material website from notes. See `/geno-notes-sites-generate` for the full workflow.
 
 ### `/gt-notes lint`
-Health-check the wiki against primary sources.
-
-**Workflow:**
-
-1. Run `geno-notes lint` — this dumps existing wiki pages AND all source material.
-2. Read the output. Check for:
-   - **Stale pages** — wiki claims that newer tasks/journal entries have superseded
-   - **Orphan pages** — wiki pages with no inbound wikilinks from other pages
-   - **Missing pages** — topics referenced via `[[wikilink]]` but no page exists
-   - **Gaps** — important topics in the sources that have no wiki page yet
-   - **Contradictions** — wiki pages that conflict with each other or with source material
-   - **Dead references** — citations to task IDs or journal entries that no longer exist
-3. Report findings as a checklist. For each issue, state what's wrong and suggest a fix.
-4. If the user approves, apply fixes directly (update/create/delete wiki pages).
-5. Log the lint: `geno-notes note "wiki lint: N issues found, M fixed" --kind milestone`
+Health-check the wiki against primary sources. See `/geno-notes-wiki-lint` for the full workflow.
 
 ## Architecture
 

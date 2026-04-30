@@ -7,6 +7,8 @@ Project journal for AI coding agents: tasks, timestamped journal entries, plans.
 | Skill | Sub-skillset | Slash command |
 |-------|-------------|---------------|
 | geno-notes | — | — (umbrella) |
+| geno-notes-wiki-compile | wiki | /geno-notes-wiki-compile |
+| geno-notes-wiki-lint | wiki | /geno-notes-wiki-lint |
 | geno-notes-sites-generate | sites | /geno-notes-sites-generate |
 
 ## Repo structure
@@ -19,7 +21,11 @@ geno-notes/
 ├── skills/
 │   ├── geno-notes/                #   umbrella skill
 │   │   └── SKILL.md
-│   └── geno-notes-sites-generate/ #   sub-skill: generate MkDocs site
+│   ├── geno-notes-wiki-compile/    #   sub-skill: compile wiki from sources
+│   │   └── SKILL.md
+│   ├── geno-notes-wiki-lint/       #   sub-skill: lint wiki health
+│   │   └── SKILL.md
+│   └── geno-notes-sites-generate/  #   sub-skill: generate MkDocs site
 │       └── SKILL.md
 ├── commands/
 │   └── gt-notes.md      #   slash command dispatcher
