@@ -23,3 +23,6 @@ chunked journal files, and two coexisting storage scopes.
 | Skill | Slash command | Description |
 |-------|--------------|-------------|
 | geno-notes | /gt-notes | Manage tasks, journal entries, plans across global and project scopes |
+| geno-notes-wiki-compile | /geno-notes-wiki-compile | Compile primary sources into wiki pages |
+| geno-notes-wiki-lint | /geno-notes-wiki-lint | Health-check the wiki against primary sources |
+| geno-notes-sites-generate | /geno-notes-sites-generate | Generate a MkDocs Material website from notes |
