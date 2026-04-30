@@ -27,8 +27,6 @@ geno-notes/
 │   │   └── SKILL.md
 │   └── geno-notes-sites-generate/  #   sub-skill: generate MkDocs site
 │       └── SKILL.md
-├── commands/
-│   └── gt-notes.md      #   slash command dispatcher
 ├── geno_notes/          # Python CLI package
 │   ├── __init__.py
 │   ├── cli.py
@@ -50,6 +48,8 @@ geno-notes/
 
 - Sub-skillsets have their own `skills/{name}/SKILL.md` and dispatch to the `geno-notes` CLI.
 - The umbrella slash command `/gt-notes` dispatches to the `geno-notes` CLI binary.
+- **Prefix aliasing**: slash commands use the canonical `geno-` prefix in source (e.g., `/geno-notes`). Short `/gt-` aliases (e.g., `/gt-notes`) are configured per-installation by `geno-tools` and are not defined in this repo.
+- **Adding a new skill**: create a directory under `skills/` named after the skill, write a `SKILL.md` with YAML frontmatter (name, description, allowed-tools, etc.), add the skill to the Skills table above, and register it in `package.json` under the `skills` map.
 
 ## Architecture
 

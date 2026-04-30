@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Project journal — tasks, timestamped journal entries, plans with two-scope (global + per-project) storage",
   "skills": {
-    "geno-notes": "skills/geno-notes"
+    "geno-notes": "skills/geno-notes",
+    "geno-notes-wiki-compile": "skills/geno-notes-wiki-compile",
+    "geno-notes-wiki-lint": "skills/geno-notes-wiki-lint",
+    "geno-notes-sites-generate": "skills/geno-notes-sites-generate"
   }
 }
