@@ -26,6 +26,7 @@ geno-tools install geno-notes
 | `/gt-notes search <query> [--all]` | Grep across tasks, journal, plans, inbox |
 | `/gt-notes promote <pat> [--to global\|project]` | Move a task between scopes |
 | `/gt-notes site [--serve\|--open]` | Generate a MkDocs Material site from notes |
+| `/geno-notes-sites-generate [--serve\|--open]` | Generate a MkDocs Material site (sub-skill) |
 
 ## Scope resolution
 
@@ -50,8 +51,10 @@ geno-notes/
 ├── commands/
 │   └── gt-notes.md       # slash command dispatcher
 ├── skills/
-│   └── geno-notes/
-│       └── SKILL.md      # skill definition
+│   ├── geno-notes/
+│   │   └── SKILL.md      # umbrella skill
+│   └── geno-notes-sites-generate/
+│       └── SKILL.md      # site generation sub-skill
 ├── geno_notes/           # Python CLI package
 │   ├── __init__.py
 │   ├── cli.py

@@ -51,8 +51,13 @@ mkdir -p "$LOCAL_BIN"
 link_file "$VENV_DIR/bin/geno-notes" "$LOCAL_BIN/geno-notes"
 echo ""
 
-# ── 3. Claude skill ──────────────────────────────────────────────────
-link_file "$REPO_DIR/skills/geno-notes" "$CLAUDE_SKILLS/geno-notes"
+# ── 3. Claude skills ─────────────────────────────────────────────────
+echo "Installing skills..."
+for skill_dir in "$REPO_DIR"/skills/geno-notes*/; do
+    [ -d "$skill_dir" ] || continue
+    name="$(basename "$skill_dir")"
+    link_file "$skill_dir" "$CLAUDE_SKILLS/$name"
+done
 echo ""
 
 # ── 4. Claude commands ───────────────────────────────────────────────
