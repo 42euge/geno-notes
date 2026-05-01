@@ -466,6 +466,37 @@ def lint_cmd(global_: bool, project_: bool):
     _dump_sources(scope)
 
 
+# ─── vault (Obsidian) ─────────────────────────────────────────────────
+
+
+@main.command()
+@click.option("--open", "do_open", is_flag=True, help="Open the vault in Obsidian.")
+@click.option("--all", "union", is_flag=True, help="Merge project + global into one vault.")
+@_scope_options
+def vault(do_open: bool, union: bool, global_: bool, project_: bool):
+    """Generate an Obsidian vault from notes."""
+    from geno_notes import vault as vault_mod
+
+    if union:
+        scopes = list_all_scopes()
+    else:
+        scopes = [_pick_scope(global_, project_)]
+
+    if not scopes:
+        click.echo("error: no scopes found", err=True)
+        sys.exit(1)
+
+    click.echo(f"Generating vault from {len(scopes)} scope(s)…")
+    vault_dir = vault_mod.generate(scopes)
+    click.echo(f"Vault ready → {vault_dir}")
+
+    if do_open:
+        vault_mod.open_vault(vault_dir)
+    elif not do_open:
+        if click.confirm("Open in Obsidian?"):
+            vault_mod.open_vault(vault_dir)
+
+
 # ─── site ─────────────────────────────────────────────────────────────
 
 
