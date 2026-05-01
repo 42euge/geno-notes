@@ -10,6 +10,7 @@ Project journal for AI coding agents: tasks, timestamped journal entries, plans.
 | geno-notes-wiki-compile | wiki | /geno-notes-wiki-compile |
 | geno-notes-wiki-lint | wiki | /geno-notes-wiki-lint |
 | geno-notes-sites-generate | sites | /geno-notes-sites-generate |
+| geno-notes-vault-generate | vault | /geno-notes-vault-generate |
 
 ## Repo structure
 
@@ -25,7 +26,9 @@ geno-notes/
 │   │   └── SKILL.md
 │   ├── geno-notes-wiki-lint/       #   sub-skill: lint wiki health
 │   │   └── SKILL.md
-│   └── geno-notes-sites-generate/  #   sub-skill: generate MkDocs site
+│   ├── geno-notes-sites-generate/  #   sub-skill: generate MkDocs site
+│   │   └── SKILL.md
+│   └── geno-notes-vault-generate/  #   sub-skill: generate Obsidian vault
 │       └── SKILL.md
 ├── commands/
 │   └── gt-notes.md      #   slash command dispatcher
