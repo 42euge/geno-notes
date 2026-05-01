@@ -6,8 +6,8 @@ description: >-
   Obsidian vault with graph view, MOCs, and wikilinks. Use when user says
   /geno-notes-vault-generate, wants to open their notes in Obsidian, or
   export their journal as an Obsidian vault.
-argument-hint: "[--open] [--all] [--global|--project]"
-allowed-tools: "Bash(geno-notes *) Bash(~/.local/bin/geno-notes *) Bash(~/.geno/venv/bin/geno-notes *)"
+argument-hint: "[--all] [--global|--project]"
+allowed-tools: "Bash(geno-notes *) Bash(~/.local/bin/geno-notes *) Bash(~/.geno/venv/bin/geno-notes *) Bash(open *)"
 license: MIT
 metadata:
   author: 42euge
@@ -26,20 +26,17 @@ Generate an Obsidian vault from the notes in the active scope. The vault is crea
 
 | Flag | Effect |
 |------|--------|
-| `--open` | Build and open the vault in Obsidian |
 | `--all` | Merge project + global scopes into one vault |
 | `--global` | Force global scope |
 | `--project` | Force project scope |
 
-Default behavior (no flags): build, then ask the user if they want to open in Obsidian.
+## Workflow
 
-## Examples
-
-```bash
-geno-notes vault --open
-geno-notes vault --all
-geno-notes vault --open --project
-```
+1. Run `geno-notes vault` with any scope flags from `$ARGUMENTS`. Pipe `n` to stdin to skip the interactive prompt: `echo n | geno-notes vault [flags]`
+2. Capture the vault path from the "Vault ready →" output line.
+3. Report what was generated — number of tasks, journal months, wiki pages, plans staged.
+4. Ask the user if they'd like to open the vault in Obsidian.
+5. If yes, open it: `open "obsidian://open?path=<vault-path>"`
 
 ## What it builds
 
@@ -60,6 +57,10 @@ The vault generator stages content from the active scope(s) into an Obsidian-rea
 - **Tags** — task tags rendered as `#tag` for Obsidian tag search
 - **MOCs** — Home and Tasks index pages for navigation
 
-## Dependencies
+## Examples
 
-Requires Obsidian to be installed for `--open`. The vault itself is plain markdown — no build step needed.
+```bash
+geno-notes vault
+geno-notes vault --all
+geno-notes vault --project
+```
