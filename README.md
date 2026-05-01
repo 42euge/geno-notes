@@ -43,15 +43,19 @@ Use `--global` or `--project` on any command to override. Use `--all` on reads t
 ```
 geno-notes/
 ├── package.json          # Vercel Skills manifest
-├── .geno-agents          # agent identity for auto-registration
-├── CLAUDE.md             # agent instructions
+├── GENO.md               # agent instructions (canonical)
+├── CLAUDE.md             # agent shim → GENO.md
 ├── install.sh            # installer (venv, symlinks, global scope)
 ├── pyproject.toml        # Python package metadata
-├── commands/
-│   └── gt-notes.md       # slash command dispatcher
 ├── skills/
-│   └── geno-notes/
-│       └── SKILL.md      # skill definition
+│   ├── geno-notes/
+│   │   └── SKILL.md      # umbrella skill definition
+│   ├── geno-notes-wiki-compile/
+│   │   └── SKILL.md      # sub-skill: compile wiki
+│   ├── geno-notes-wiki-lint/
+│   │   └── SKILL.md      # sub-skill: lint wiki
+│   └── geno-notes-sites-generate/
+│       └── SKILL.md      # sub-skill: generate site
 ├── geno_notes/           # Python CLI package
 │   ├── __init__.py
 │   ├── cli.py

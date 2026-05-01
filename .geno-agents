@@ -1,7 +1,0 @@
-role: geno-notes
-description: Project journal — tasks, timestamped journal entries, plans with two-scope (global + per-project) storage
-capabilities:
-  - task-management
-  - journal
-  - project-notes
-  - scope-resolution

@@ -108,7 +108,7 @@ geno-notes implements the [Karpathy llm-wiki pattern](https://gist.github.com/ka
 |---|---|---|
 | **Primary sources** | `tasks/`, `journal/`, `plans/`, `inbox.md` | System of record. Human + agent edited. |
 | **Wiki** | `wiki/` | Derived view. Agent-generated, rebuildable. Compounds over time. |
-| **Schema** | `SKILL.md`, `CLAUDE.md` | Tells the agent how to operate. |
+| **Schema** | `SKILL.md`, `GENO.md` | Tells the agent how to operate. |
 
 ## Files (per scope)
 
