@@ -11,6 +11,16 @@ license: MIT
 metadata:
   author: 42euge
   version: "0.1.0"
+observability:
+  success_signal: "MkDocs site built (or serve started) with content from active scope"
+  failure_signals:
+    - "geno-notes site command fails or staging directory is empty"
+    - "mkdocs or mkdocs-material not installed and user declines install"
+    - "serve mode fails to bind port"
+  knowledge_reads:
+    - "tasks, journal entries, wiki pages, and plans from active scope"
+  knowledge_writes:
+    - "static site at .geno-notes/_site_staging/site/"
 ---
 
 # Generate Site
@@ -50,6 +60,22 @@ The site generator stages content from the active scope(s) into a temporary MkDo
 - **Journal** — monthly entries rendered as timeline pages
 - **Wiki** — compiled topic pages with wikilinks
 - **Plans** — task-linked planning documents
+
+## Completion
+
+When this skill finishes, emit a trace:
+
+```bash
+geno-trace emit \
+  --skill geno-notes-sites-generate \
+  --status <success|failure|abandoned> \
+  --tool-calls <approximate count> \
+  --errors <count of tool/command errors>
+```
+
+- `success` = site built to _site_staging/site/ (or serve started and accessible)
+- `failure` = site command failed, missing dependencies not resolved, or serve could not bind port
+- `abandoned` = user stopped early
 
 ## Dependencies
 

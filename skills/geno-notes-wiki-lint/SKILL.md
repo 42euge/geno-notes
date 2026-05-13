@@ -11,6 +11,18 @@ license: MIT
 metadata:
   author: 42euge
   version: "0.1.0"
+observability:
+  success_signal: "lint issues detected and reported (and optionally fixed)"
+  failure_signals:
+    - "geno-notes lint command fails or returns no data"
+    - "wiki directory missing or empty — nothing to lint"
+    - "fix application corrupts or deletes wrong wiki pages"
+  knowledge_reads:
+    - "existing wiki pages for health-checking"
+    - "primary sources (tasks, journal, plans) via geno-notes lint"
+  knowledge_writes:
+    - "updated/created/deleted wiki pages (when fixes are applied)"
+    - "milestone note logged via geno-notes note"
 ---
 
 # Wiki Lint
@@ -49,3 +61,19 @@ geno-notes lint
 geno-notes lint --global
 geno-notes lint --project
 ```
+
+## Completion
+
+When this skill finishes, emit a trace:
+
+```bash
+geno-trace emit \
+  --skill geno-notes-wiki-lint \
+  --status <success|failure|abandoned> \
+  --tool-calls <approximate count> \
+  --errors <count of tool/command errors>
+```
+
+- `success` = lint issues detected, reported, and fixes applied (or no issues found)
+- `failure` = lint command failed, wiki directory missing, or fix application corrupted pages
+- `abandoned` = user stopped early

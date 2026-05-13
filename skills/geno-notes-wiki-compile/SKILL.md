@@ -11,6 +11,19 @@ license: MIT
 metadata:
   author: 42euge
   version: "0.1.0"
+observability:
+  success_signal: "wiki pages created or updated and index.md refreshed"
+  failure_signals:
+    - "geno-notes compile command fails or returns no source material"
+    - "write to wiki directory fails (permissions, missing scope dir)"
+    - "compile produces zero pages from non-empty sources"
+  knowledge_reads:
+    - "primary sources (tasks, journal entries, plans) via geno-notes compile"
+    - "existing wiki pages for update-vs-create decisions"
+  knowledge_writes:
+    - "wiki topic pages in <scope-dir>/wiki/<topic-slug>.md"
+    - "wiki index at <scope-dir>/wiki/index.md"
+    - "milestone note logged via geno-notes note"
 ---
 
 # Wiki Compile
@@ -57,3 +70,19 @@ geno-notes compile
 geno-notes compile --global
 geno-notes compile --project
 ```
+
+## Completion
+
+When this skill finishes, emit a trace:
+
+```bash
+geno-trace emit \
+  --skill geno-notes-wiki-compile \
+  --status <success|failure|abandoned> \
+  --tool-calls <approximate count> \
+  --errors <count of tool/command errors>
+```
+
+- `success` = wiki pages created/updated and index.md refreshed from primary sources
+- `failure` = compile produced no pages, write errors, or source material could not be read
+- `abandoned` = user stopped early

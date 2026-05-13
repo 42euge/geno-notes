@@ -12,6 +12,16 @@ license: MIT
 metadata:
   author: 42euge
   version: "0.1.0"
+observability:
+  success_signal: "Obsidian vault staged at _vault_staging/ with content ready to open"
+  failure_signals:
+    - "geno-notes vault command fails or produces empty staging directory"
+    - "vault path not captured from output"
+    - "Obsidian open URI fails or Obsidian not installed"
+  knowledge_reads:
+    - "tasks, journal entries, wiki pages, and plans from active scope"
+  knowledge_writes:
+    - "Obsidian vault directory at .geno-notes/_vault_staging/"
 ---
 
 # Generate Obsidian Vault
@@ -64,3 +74,19 @@ geno-notes vault
 geno-notes vault --all
 geno-notes vault --project
 ```
+
+## Completion
+
+When this skill finishes, emit a trace:
+
+```bash
+geno-trace emit \
+  --skill geno-notes-vault-generate \
+  --status <success|failure|abandoned> \
+  --tool-calls <approximate count> \
+  --errors <count of tool/command errors>
+```
+
+- `success` = vault staged at _vault_staging/ with content, user informed (and optionally opened in Obsidian)
+- `failure` = vault command failed, staging directory empty, or vault path not captured
+- `abandoned` = user stopped early
