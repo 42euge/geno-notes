@@ -12,6 +12,18 @@ license: MIT
 metadata:
   author: 42euge
   version: "0.1.0"
+observability:
+  success_signal: "geno-notes CLI subcommand completed and output displayed to user"
+  failure_signals:
+    - "geno-notes CLI not installed or not on PATH"
+    - "no scope resolved (neither global nor project scope found)"
+    - "task pattern matched zero or multiple tasks ambiguously"
+  knowledge_reads:
+    - "~/.geno/geno-notes/ (global scope — tasks, journal, wiki, plans)"
+    - "./geno/geno-notes/ (project scope — tasks, journal, wiki, plans)"
+  knowledge_writes:
+    - "~/.geno/geno-notes/ (global scope mutations — tasks, journal, inbox)"
+    - "./geno/geno-notes/ (project scope mutations — tasks, journal, inbox)"
 ---
 
 # geno-notes — Project Journal
