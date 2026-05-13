@@ -10,7 +10,7 @@ from pathlib import Path
 import click
 
 from geno_notes import SCHEMA_VERSION, events, journal, tasks
-from geno_notes.config import ensure_config, read_config, write_config
+from geno_notes.config import ensure_config, read_config, set_field, write_config
 from geno_notes.indexer import reindex
 from geno_notes.paths import (
     GLOBAL_DIR,
@@ -330,6 +330,158 @@ def search(query: str, union: bool, global_: bool, project_: bool):
         click.echo(f"  [{h.scope}] {h.path}:{h.line_no}: {h.line}")
 
 
+# ─── context (curated bundle for skill execution) ────────────────────
+
+
+@main.command()
+@click.option("--skill", "-s", default=None, help="Skill name (for health card lookup).")
+@click.option("--task", "-t", "task_pattern", default=None, help="Task pattern to focus on.")
+@click.option("--json", "as_json", is_flag=True, help="Emit JSON.")
+@click.option("--all", "union", is_flag=True, help="Union project + global.")
+@_scope_options
+def context(
+    skill: str | None,
+    task_pattern: str | None,
+    as_json: bool,
+    union: bool,
+    global_: bool,
+    project_: bool,
+):
+    """Curated context bundle for skill execution.
+
+    Returns active tasks, recent journal entries, relevant wiki pages,
+    and skill health card in a single output.
+    """
+    from datetime import datetime, timedelta, timezone
+
+    scopes = list_all_scopes() if union else [_pick_scope(global_, project_)]
+
+    bundle: dict = {"scope": scopes[0].name if scopes else "global"}
+
+    # 1. Active tasks
+    active_tasks: list[dict] = []
+    focused_task: dict | None = None
+    for scope in scopes:
+        for t in tasks.load_all(scope.dir):
+            if task_pattern:
+                resolved = None
+                try:
+                    resolved = _resolve_task(scope, task_pattern)
+                except SystemExit:
+                    pass
+                if resolved and resolved.id == t.id:
+                    focused_task = tasks.to_dict(t)
+                    focused_task["scope"] = scope.name
+            if t.status == "active":
+                d = tasks.to_dict(t)
+                d["scope"] = scope.name
+                active_tasks.append(d)
+    bundle["active_tasks"] = active_tasks
+    if focused_task:
+        bundle["focused_task"] = focused_task
+
+    # 2. Recent journal entries (last 7 days)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=7)
+    cutoff_str = cutoff.strftime("%Y-%m-%d")
+    recent_journal: list[dict] = []
+    for scope in scopes:
+        for rec in journal.iter_jsonl(scope.dir):
+            ts = rec.get("ts", "")
+            if ts >= cutoff_str:
+                rec["scope"] = scope.name
+                if task_pattern and focused_task:
+                    if rec.get("task_id") == focused_task.get("id"):
+                        rec["_relevant"] = True
+                recent_journal.append(rec)
+    bundle["recent_journal"] = recent_journal[-30:]
+
+    # 3. Plan for focused task
+    if focused_task:
+        for scope in scopes:
+            plan_path = scope.dir / "plans" / f"{focused_task['id']}.md"
+            if plan_path.exists():
+                bundle["plan"] = plan_path.read_text(encoding="utf-8")
+                break
+
+    # 4. Relevant wiki pages
+    wiki_pages: list[dict] = []
+    search_terms: list[str] = []
+    if skill:
+        search_terms.append(skill.replace("geno-", "").replace("-", " "))
+    if focused_task:
+        search_terms.extend(focused_task.get("tags", []))
+        search_terms.append(focused_task.get("title", ""))
+
+    for scope in scopes:
+        wiki_dir = scope.dir / "wiki"
+        if not wiki_dir.is_dir():
+            continue
+        for page in sorted(wiki_dir.glob("*.md")):
+            if page.name in ("index.md", "README.md"):
+                continue
+            content = page.read_text(encoding="utf-8")
+            if search_terms:
+                content_lower = content.lower()
+                if any(term.lower() in content_lower for term in search_terms if term):
+                    wiki_pages.append({
+                        "slug": page.stem,
+                        "scope": scope.name,
+                        "excerpt": content[:500],
+                    })
+            else:
+                wiki_pages.append({
+                    "slug": page.stem,
+                    "scope": scope.name,
+                    "excerpt": content[:200],
+                })
+    bundle["wiki_pages"] = wiki_pages[:10]
+
+    # 5. Skill health card (from geno-trace)
+    if skill:
+        health_path = Path.home() / ".geno" / "health" / f"{skill}.json"
+        if health_path.exists():
+            bundle["skill_health"] = json.loads(health_path.read_text(encoding="utf-8"))
+
+    # 6. Wiki staleness
+    config_path = scopes[0].dir / ".geno-notes" / "config.toml" if scopes else None
+    if config_path and config_path.exists():
+        config_text = config_path.read_text(encoding="utf-8")
+        if "wiki_last_compiled" in config_text:
+            for line in config_text.splitlines():
+                if line.startswith("wiki_last_compiled"):
+                    bundle["wiki_last_compiled"] = line.split("=", 1)[1].strip().strip('"')
+                    break
+
+    # Output
+    if as_json:
+        click.echo(json.dumps(bundle, indent=2))
+    else:
+        click.echo(f"# Context — {bundle['scope']} scope")
+        if focused_task:
+            ft = focused_task
+            click.echo(f"\n## Focused task: {ft['id']}")
+            click.echo(f"  {ft['title']}  [{ft['status']}]  tags: {', '.join(ft.get('tags', []))}")
+        click.echo(f"\n## Active tasks ({len(active_tasks)})")
+        for t in active_tasks:
+            click.echo(f"  [{t['status']}] {t['id']:<28} {t['title']}  ({t['scope']})")
+        click.echo(f"\n## Recent journal ({len(recent_journal)} entries, last 7 days)")
+        for r in recent_journal[-10:]:
+            rel = " *" if r.get("_relevant") else ""
+            click.echo(f"  {r.get('ts', '?')[:16]}  [{r.get('kind', 'note')}] {r.get('text', '')[:80]}{rel}")
+        if bundle.get("plan"):
+            click.echo(f"\n## Plan\n{bundle['plan'][:500]}")
+        click.echo(f"\n## Wiki pages ({len(wiki_pages)} relevant)")
+        for w in wiki_pages:
+            click.echo(f"  [{w['scope']}] {w['slug']}")
+        if bundle.get("skill_health"):
+            h = bundle["skill_health"]
+            s = h.get("stats", {})
+            click.echo(f"\n## Skill health: {h.get('skill', skill)}")
+            click.echo(f"  success rate: {s.get('success_rate', 0):.0%}  invocations: {s.get('total_invocations', 0)}")
+            if h.get("needs_retro"):
+                click.echo("  ⚠ needs retro")
+
+
 # ─── cross-scope ops ───────────────────────────────────────────────────
 
 
@@ -449,6 +601,9 @@ def compile_cmd(global_: bool, project_: bool):
 
     _dump_sources(scope)
     _dump_wiki(scope)
+
+    from datetime import datetime, timezone
+    set_field(scope.dir, "wiki_last_compiled", datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"))
 
 
 @main.command("lint")

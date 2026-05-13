@@ -60,6 +60,23 @@ def ensure_config(scope_dir: Path, scope_name: str) -> dict:
     return cfg
 
 
+def set_field(scope_dir: Path, key: str, value: str) -> None:
+    """Append or update a single key in config.toml."""
+    p = config_path(scope_dir)
+    if not p.exists():
+        return
+    lines = p.read_text(encoding="utf-8").splitlines()
+    found = False
+    for i, line in enumerate(lines):
+        if line.startswith(f"{key} "):
+            lines[i] = f'{key} = "{value}"'
+            found = True
+            break
+    if not found:
+        lines.append(f'{key} = "{value}"')
+    p.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
 def _check_schema(cfg: dict) -> None:
     got = str(cfg.get("schema_version", "0.0.0"))
     if _vt(got) > _vt(SCHEMA_VERSION):

@@ -102,6 +102,10 @@ def ensure_structure(scope: Scope) -> None:
     (d / "journal").mkdir(exist_ok=True)
     (d / "plans").mkdir(exist_ok=True)
     (d / "wiki").mkdir(exist_ok=True)
+    (d / "skill-knowledge").mkdir(exist_ok=True)
+    (d / "skill-knowledge" / "patterns").mkdir(exist_ok=True)
+    (d / "skill-knowledge" / "decisions").mkdir(exist_ok=True)
+    (d / "skill-knowledge" / "errata").mkdir(exist_ok=True)
     (d / ".geno-notes").mkdir(exist_ok=True)
     (d / ".geno-notes" / "locks").mkdir(exist_ok=True)
 
