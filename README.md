@@ -1,5 +1,7 @@
 # geno-notes
 
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://42euge.github.io/geno-notes/)
+
 Project journal for AI coding agents. Tasks, timestamped journal entries, and plans with two coexisting scopes — global (`~/.geno/geno-notes/`) and per-project (`./geno/geno-notes/`).
 
 ## Install
