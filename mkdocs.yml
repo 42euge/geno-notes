@@ -1,6 +1,6 @@
 site_name: geno-notes
-site_description: Project journal for AI coding agents — tasks, journal entries, and plans
-site_url: https://42euge.github.io/geno-notes
+site_description: Project journal with tasks, journal entries, plans, and wiki
+site_url: https://42euge.github.io/geno-notes/
 repo_url: https://github.com/42euge/geno-notes
 repo_name: 42euge/geno-notes
 
@@ -24,11 +24,11 @@ theme:
   font:
     text: Inter
     code: JetBrains Mono
-  logo: assets/logo.svg
-  favicon: assets/logo.svg
   icon:
     repo: fontawesome/brands/github
   features:
+    - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.top
     - content.code.copy
@@ -38,9 +38,9 @@ theme:
     - toc.follow
 
 nav:
-  - Home: index.md
-  - Getting Started: getting-started.md
   - Commands: commands.md
+  - Getting Started: getting-started.md
+  - Home: index.md
 
 extra_css:
   - stylesheets/extra.css
@@ -54,9 +54,6 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.tabbed:
       alternate_style: true
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - attr_list
   - md_in_html
   - def_list
