@@ -54,3 +54,15 @@ The site generator stages content from the active scope(s) into a temporary MkDo
 ## Dependencies
 
 Requires `mkdocs` and `mkdocs-material`. The CLI will prompt to install them if missing.
+
+## Completion
+
+When this skill finishes, emit a trace:
+
+```bash
+geno-trace emit \
+  --skill geno-notes-sites-generate \
+  --status <success|failure|abandoned> \
+  --tool-calls <approximate count> \
+  --errors <count of tool/command errors>
+```
