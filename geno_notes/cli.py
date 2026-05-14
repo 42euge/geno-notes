@@ -449,7 +449,17 @@ def context(
         if "wiki_last_compiled" in config_text:
             for line in config_text.splitlines():
                 if line.startswith("wiki_last_compiled"):
-                    bundle["wiki_last_compiled"] = line.split("=", 1)[1].strip().strip('"')
+                    ts_str = line.split("=", 1)[1].strip().strip('"')
+                    bundle["wiki_last_compiled"] = ts_str
+                    try:
+                        from datetime import datetime, timezone
+                        compiled_dt = datetime.fromisoformat(ts_str)
+                        if compiled_dt.tzinfo is None:
+                            compiled_dt = compiled_dt.replace(tzinfo=timezone.utc)
+                        age_days = (datetime.now(timezone.utc) - compiled_dt).days
+                        bundle["wiki_stale"] = age_days > 7
+                    except (ValueError, TypeError):
+                        bundle["wiki_stale"] = True
                     break
 
     # Output
@@ -473,6 +483,9 @@ def context(
         click.echo(f"\n## Wiki pages ({len(wiki_pages)} relevant)")
         for w in wiki_pages:
             click.echo(f"  [{w['scope']}] {w['slug']}")
+        if bundle.get("wiki_last_compiled"):
+            stale_marker = " (stale)" if bundle.get("wiki_stale") else ""
+            click.echo(f"\n## Wiki: last compiled {bundle['wiki_last_compiled']}{stale_marker}")
         if bundle.get("skill_health"):
             h = bundle["skill_health"]
             s = h.get("stats", {})

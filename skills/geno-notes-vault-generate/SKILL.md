@@ -64,3 +64,15 @@ geno-notes vault
 geno-notes vault --all
 geno-notes vault --project
 ```
+
+## Completion
+
+When this skill finishes, emit a trace:
+
+```bash
+geno-trace emit \
+  --skill geno-notes-vault-generate \
+  --status <success|failure|abandoned> \
+  --tool-calls <approximate count> \
+  --errors <count of tool/command errors>
+```

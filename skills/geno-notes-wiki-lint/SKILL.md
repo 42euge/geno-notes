@@ -49,3 +49,15 @@ geno-notes lint
 geno-notes lint --global
 geno-notes lint --project
 ```
+
+## Completion
+
+When this skill finishes, emit a trace:
+
+```bash
+geno-trace emit \
+  --skill geno-notes-wiki-lint \
+  --status <success|failure|abandoned> \
+  --tool-calls <approximate count> \
+  --errors <count of tool/command errors>
+```

@@ -57,3 +57,15 @@ geno-notes compile
 geno-notes compile --global
 geno-notes compile --project
 ```
+
+## Completion
+
+When this skill finishes, emit a trace:
+
+```bash
+geno-trace emit \
+  --skill geno-notes-wiki-compile \
+  --status <success|failure|abandoned> \
+  --tool-calls <approximate count> \
+  --errors <count of tool/command errors>
+```
